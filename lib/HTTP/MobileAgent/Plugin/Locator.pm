@@ -3,7 +3,9 @@ package HTTP::MobileAgent::Plugin::Locator;
 use warnings;
 use strict;
 use HTTP::MobileAgent;
+use Carp;
 use UNIVERSAL::require;
+use UNIVERSAL::can;
 
 our $VERSION = '0.01';
 
@@ -11,7 +13,11 @@ sub import {
     my $class = shift;
     no strict 'refs';
     *{"HTTP\::MobileAgent\::gps_compliant"} = \&_gps_compliant;
-    *{"HTTP\::MobileAgent\::get_location"}  = \&_get_location;
+    *{"HTTP\::MobileAgent\::locator"}       = sub { $class->new( shift ) };
+    *{"HTTP\::MobileAgent\::get_location"}  = sub {
+        my ( $self, $stuff ) = @_;
+        $self->locator->get_location( _prepare_params( $stuff ) );
+    };
 }
 
 sub _gps_compliant {
@@ -26,32 +32,44 @@ sub _gps_compliant {
     }
 }
 
-sub _get_location {
-    my ( $self, $query ) = @_;
-    my $module;
-    if ( $self->is_docomo ) {
-        $module = $self->gps_compliant
-            ? 'HTTP::MobileAgent::Plugin::Locator::DoCoMo::GPS'
-            : 'HTTP::MobileAgent::Plugin::Locator::DoCoMo::BasicLocation';
+sub new {
+    my ( $class, $agent ) = @_;
+
+    my $sub;
+    if ( $agent->is_docomo ) {
+        $sub = $agent->gps_compliant ? 'DoCoMo::GPS'
+                                     : 'DoCoMo::BasicLocation';
     }
-    elsif ( $self->is_ezweb ) {
-        $module = $self->gps_compliant
-            ? 'HTTP::MobileAgent::Plugin::Locator::EZweb::GPS'
-            : 'HTTP::MobileAgent::Plugin::Locator::EZweb::BasicLocation';
+    elsif ( $agent->is_ezweb ) {
+        $sub = $agent->gps_compliant ? 'EZweb::GPS'
+                                     : 'EZweb::BasicLocation';
     }
-    elsif ( $self->is_softbank ) {
-        $module = $self->gps_compliant
-            ? 'HTTP::MobileAgent::Plugin::Locator::SoftBank::GPS'
-            : 'HTTP::MobileAgent::Plugin::Locator::SoftBank::BasicLocation';
+    elsif ( $agent->is_softbank ) {
+        $sub = $agent->gps_compliant ? 'SoftBank::GPS'
+                                     : 'SoftBank::BasicLocation';
     }
-    elsif ( $self->is_airh_phone ) {
-        $module = 'HTTP::MobileAgent::Plugin::Locator::Willcom::BasicLocation';
+    elsif ( $agent->is_airh_phone ) {
+        $sub = 'Willcom::BasicLocation';
     }
     else {
-        die "non mobile";
+        croak( "Invalid mobile user agent: " . $agent->user_agent );
     }
-    $module->require or die $!;
-    return $module->new( $query )->get_location;
+
+    my $locator_class = "HTTP::MobileAgent::Plugin::Locator\::$sub";
+    $locator_class->require or die $!;
+    return bless {}, $locator_class;
+}
+
+sub get_location { die "ABSTRACT METHOD" }
+
+sub _prepare_params {
+    my $stuff = shift;
+    if ( ref $stuff && eval { $stuff->can( 'param' ) } ) {
+        return +{ map { $_ => $stuff->param( $_ ) } $stuff->param };
+    }
+    else {
+        return $stuff;
+    }
 }
 
 1;
@@ -63,31 +81,31 @@ HTTP::MobileAgent::Plugin::Locator - Handling mobile location information plugin
 
 =head1 SYNOPSIS
 
+    use CGI;
     use HTTP::MobileAgent;
     use HTTP::MobileAgent::Plugin::Locator;
 
-    # get parameters
+    # get location is Geo::Coordinates::Converter::Point instance formatted wgs84
     my $q = CGI->new;
-    $params = { map { $_ => $q->param( $_ ) } $q->param };
-
-    # get location
     my $agent = HTTP::MobileAgent->new;
-    my $location = $agent->get_location( $params );
+    my $location = $agent->location( $q );
 
-    print "lat is " . $location->{ lat };
-    print "lng is " . $location->{ lng };
+    print "lat is " . $location->lat;
+    print "lng is " . $location->lng;
 
 =head1 METHODS
 
 =over
 
-=item get_location([ gps or basic location parameters from carrier ]);
+=item location([params]);
 
-return hashref included latitude and longitude if specify gps or basic location parameters from carrier. The parameters is different by carrier.
+return Geo::Coordinates::Converter::Point instance formatted if specify gps or basic location parameters sent from carrier. The parameters are different by each carrier.
 
-=item gps_compliant
+This method accept a Apache instance, CGI instance or hashref of query parameters.
 
-returns if the agent is GPS compliant
+=item gps_compliant()
+
+returns if the agent is GPS compliant.
 
 =back
 
@@ -124,6 +142,14 @@ for GPS data support.
 for basic location information data support.
 
 =back
+
+=head1 EXAMPLES
+
+There is request template using C<Template> in eg directory and mod_rewrite configuration for ezweb extraordinary parameter handling.
+
+=head1 SEE ALSO
+
+C<HTTP::MobileAgent>, C<Geo::Coordinates::Converter>, C<Geo::Coordinates::Converter::Point>, C<Location::Area::DoCoMo::iArea>
 
 =head1 AUTHOR
 

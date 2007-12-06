@@ -14,5 +14,6 @@ requires:
   Geo::Coordinates::Converter: 0
   HTTP::MobileAgent: 0
   Location::Area::DoCoMo::iArea: 0
+  UNIVERSAL::can: 0
   UNIVERSAL::require: 0
 version: 0.01
