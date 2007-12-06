@@ -97,7 +97,7 @@ HTTP::MobileAgent::Plugin::Locator - Handling mobile location information plugin
 
 =over
 
-=item location([params]);
+=item get_location([params]);
 
 return Geo::Coordinates::Converter::Point instance formatted if specify gps or basic location parameters sent from carrier. The parameters are different by each carrier.
 
