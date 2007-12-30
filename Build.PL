@@ -10,7 +10,6 @@ my $builder = Module::Build->new(
     requires => {
         'Test::More' => 0,
         'Geo::Coordinates::Converter' => 0,
-        'Location::Area::DoCoMo::iArea' => 0,
         'HTTP::MobileAgent' => 0,
         'UNIVERSAL::require' => 0,
         'UNIVERSAL::can' => 0,

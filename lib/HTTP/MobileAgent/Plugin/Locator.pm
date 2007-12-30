@@ -149,7 +149,7 @@ There is request template using C<Template> in eg directory and mod_rewrite conf
 
 =head1 SEE ALSO
 
-C<HTTP::MobileAgent>, C<Geo::Coordinates::Converter>, C<Geo::Coordinates::Converter::Point>, C<Location::Area::DoCoMo::iArea>
+C<HTTP::MobileAgent>, C<Geo::Coordinates::Converter>, C<Geo::Coordinates::Converter::Point>
 
 =head1 AUTHOR
 

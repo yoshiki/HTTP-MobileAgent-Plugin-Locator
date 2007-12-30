@@ -17,7 +17,7 @@ use HTTP::MobileAgent::Plugin::Locator;
 {
     local $ENV{HTTP_USER_AGENT} = 'DoCoMo/1.0/P503i/c10';
     my $agent = HTTP::MobileAgent->new;
-    my $location = $agent->get_location( { AREACODE => '05902' } );
+    my $location = $agent->get_location( { AREACODE => '05902', LAT => '+35.39.43.538', LON => '+139.44.06.232', GEO => 'wgs84', XACC => 1 } );
     is ref $location, 'Geo::Coordinates::Converter::Point';
     is_deeply( { lat => $location->lat, lng => $location->lng  },
                { lat => '35.39.43.538', lng => '139.44.06.232' } );

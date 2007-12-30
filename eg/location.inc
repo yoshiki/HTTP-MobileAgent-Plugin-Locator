@@ -1,7 +1,7 @@
 [%- linkname = linkname || 'Send Location Information' -%]
 [%- IF agent.is_docomo # DoCoMo -%]
 [%- USE u = URL( back_url, query_params ) -%]
-[%- IF agent.gps_compliant # GPS -%]<a href="[% u %]" lcs>[% linkname %]</a>[%- ELSE # location -%]<a href="http://w1m.docomo.ne.jp/cp/iarea?ecode=OPENAREACODE&msn=OPENAREAKEY&nl=[% u %]">[% linkname %]</a>[% END -%]
+[%- IF agent.gps_compliant # GPS -%]<a href="[% u %]" lcs>[% linkname %]</a>[%- ELSE # location -%]<a href="http://w1m.docomo.ne.jp/cp/iarea?ecode=OPENAREACODE&msn=OPENAREAKEY&posinfo=1&nl=[% u %]">[% linkname %]</a>[% END -%]
 [%- ELSIF agent.is_ezweb # EZweb -%]
 [%- new_url = '/path/to/program/param1/' _ query_params.param1 _ '/param2/' _ query_params.param2;
     back_url = back_url.replace( '/search/location', new_url );
