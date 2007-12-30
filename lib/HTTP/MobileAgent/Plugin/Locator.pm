@@ -9,6 +9,8 @@ use UNIVERSAL::can;
 
 our $VERSION = '0.01';
 
+our $DOCOMO_GPS_COMPLIANT_MODELS = qr/(?:90[345]|SA[78]0[02]i)/;
+
 sub import {
     my $class = shift;
     no strict 'refs';
@@ -23,7 +25,7 @@ sub import {
 sub _gps_compliant {
     my $self = shift;
     if ( $self->is_docomo ) {
-        return $self->model =~ /(?:90[345]|SA[78]0[02]i)/;
+        return $self->model =~ $DOCOMO_GPS_COMPLIANT_MODELS;
     } elsif ( $self->is_ezweb ) {
         my @specs = split //, $ENV{ HTTP_X_UP_DEVCAP_MULTIMEDIA } || '';
         return defined $specs[ 1 ] && $specs[ 1 ] =~ /^[23]$/;
