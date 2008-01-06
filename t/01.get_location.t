@@ -24,6 +24,15 @@ use HTTP::MobileAgent::Plugin::Locator;
 }
 
 {
+    local $ENV{HTTP_USER_AGENT} = 'DoCoMo/1.0/P503i/c10';
+    my $agent = HTTP::MobileAgent->new;
+    my $location = $agent->get_location( { AREACODE => '05902' } );
+    is ref $location, 'Geo::Coordinates::Converter::Point';
+    is_deeply( { lat => $location->lat, lng => $location->lng  },
+               { lat => '35.39.43.535', lng => '139.44.06.233' } );
+}
+
+{
     local $ENV{HTTP_USER_AGENT} = 'KDDI-CA31 UP.Browser/6.2.0.7.3.129 (GUI) MMP/2.0';
     local $ENV{HTTP_X_UP_DEVCAP_MULTIMEDIA} = '0200000000000000';
     my $agent = HTTP::MobileAgent->new;
