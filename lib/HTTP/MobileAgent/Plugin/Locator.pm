@@ -90,7 +90,7 @@ HTTP::MobileAgent::Plugin::Locator - Handling mobile location information plugin
     # get location is Geo::Coordinates::Converter::Point instance formatted wgs84
     my $q = CGI->new;
     my $agent = HTTP::MobileAgent->new;
-    my $location = $agent->location( $q );
+    my $location = $agent->get_location( $q );
 
     print "lat is " . $location->lat;
     print "lng is " . $location->lng;
