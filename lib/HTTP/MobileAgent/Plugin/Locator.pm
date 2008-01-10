@@ -9,7 +9,7 @@ use UNIVERSAL::can;
 
 our $VERSION = '0.01';
 
-our $DOCOMO_GPS_COMPLIANT_MODELS = qr/(?:90[345]|SA[78]0[02]i)/;
+our $DOCOMO_GPS_COMPLIANT_MODELS = qr/(?:903i(?!TV|X)|(?:90[45]|SA[78]0[02])i)/;
 
 sub import {
     my $class = shift;

@@ -10,6 +10,24 @@ use HTTP::MobileAgent::Plugin::Locator;
 }
 
 {
+    local $ENV{HTTP_USER_AGENT} = 'DoCoMo/2.0 P903i(c100;TB;W24H16)';
+    my $agent = HTTP::MobileAgent->new;
+    ok $agent->gps_compliant, "docomo gps";
+}
+
+{
+    local $ENV{HTTP_USER_AGENT} = 'DoCoMo/2.0 P903iTV(c100;TB;W24H16)';
+    my $agent = HTTP::MobileAgent->new;
+    ok !$agent->gps_compliant, "not compliant docomo gps";
+}
+
+{
+    local $ENV{HTTP_USER_AGENT} = 'DoCoMo/2.0 P903iX(c100;TB;W24H16)';
+    my $agent = HTTP::MobileAgent->new;
+    ok !$agent->gps_compliant, "not compliant docomo gps";
+}
+
+{
     local $ENV{HTTP_USER_AGENT} = 'DoCoMo/1.0/P503i/c10';
     my $agent = HTTP::MobileAgent->new;
     ok !$agent->gps_compliant, "docomo basic";
