@@ -149,17 +149,19 @@ for basic location information data support.
 
 There is request template using C<Template> in eg directory and mod_rewrite configuration for ezweb extraordinary parameter handling.
 
-=head1 SEE ALSO
-
-C<HTTP::MobileAgent>, C<Geo::Coordinates::Converter>, C<Geo::Coordinates::Converter::Point>
-
 =head1 AUTHOR
 
-Yoshiki Kurihara  C<< <kurihara at cpan.org> >>
+Yoshiki Kurihara  E<lt>kurihara __at__ cpan.orgE<gt> with many feedbacks and changes from:
+
+  Tokuhiro Matsuno E<lt>tokuhiro __at__ mobilefactory.jpE<gt>
+
+=head1 SEE ALSO
+
+C<HTTP::MobileAgent>, C<Geo::Coordinates::Converter>, C<Geo::Coordinates::Converter::Point>, C<Geo::Coordinates::Converter::iArea>, C<http://coderepos.org/share/log/lang/perl/HTTP-MobileAgent-Plugin-Locator/>
 
 =head1 LICENCE AND COPYRIGHT
 
-Copyright (c) 2007, Yoshiki Kurihara C<< <kurihara at cpan.org> >>. All rights reserved.
+Copyright (c) 2008, Yoshiki Kurihara E<lt>kurihara __at__ cpan.orgE<gt>. All rights reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself. See L<perlartistic>.

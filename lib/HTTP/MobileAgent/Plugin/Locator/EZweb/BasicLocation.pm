@@ -15,7 +15,7 @@ sub get_location {
         lat    => $lat,
         lng    => $lng,
         datum  => $datum,
-        format => $format || undef,
+        format => $format,
     )->convert;
 }
 

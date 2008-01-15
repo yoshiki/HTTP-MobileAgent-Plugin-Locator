@@ -3,7 +3,7 @@ use warnings;
 use inc::Module::Install;
 
 name            'HTTP-MobileAgent-Plugin-Locator';
-author          'Yoshiki Kurihara <kurihara at cpan.org>';
+author          'Yoshiki Kurihara <kurihara __at__ cpan.org>';
 all_from        'lib/HTTP/MobileAgent/Plugin/Locator.pm';
 version_from    'lib/HTTP/MobileAgent/Plugin/Locator.pm';
 

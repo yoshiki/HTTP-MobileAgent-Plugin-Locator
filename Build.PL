@@ -4,8 +4,7 @@ use Module::Build;
 
 my $builder = Module::Build->new(
     module_name         => 'HTTP::MobileAgent::Plugin::Locator',
-    license             => '',
-    dist_author         => 'Yoshiki Kurihara <kurihara at cpan.org>',
+    dist_author         => 'Yoshiki Kurihara <kurihara __at__ cpan.org>',
     dist_version_from   => 'lib/HTTP/MobileAgent/Plugin/Locator.pm',
     requires => {
         'Test::More' => 0,

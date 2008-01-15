@@ -16,13 +16,9 @@ Alternatively, to install with Module::Build, you can use the following commands
 	./Build test
 	./Build install
 
-DEPENDENCIES
-
-None.
-
 COPYRIGHT
 
-Copyright (C) 2007, Yoshiki Kurihara
+Copyright (C) 2008, Yoshiki Kurihara
 
 LICENCE
 

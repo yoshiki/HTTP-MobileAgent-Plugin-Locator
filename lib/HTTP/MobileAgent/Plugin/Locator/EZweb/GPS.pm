@@ -10,7 +10,7 @@ sub get_location {
     (my $lat = $params->{ lat }) =~ s/^[\-\+]//g;
     (my $lng = $params->{ lon }) =~ s/^[\-\+]//g;
     my $datum = defined $params->{ datum } && $params->{ datum } == 1 ? 'tokyo' : 'wgs84';
-    my $format = defined $params->{ unit } && $params->{unit} == 1 ? 'degree' : 'dms';
+    my $format = defined $params->{ unit } && $params->{ unit } == 1 ? 'degree' : 'dms';
     return Geo::Coordinates::Converter->new(
         lat    => $lat,
         lng    => $lng,
