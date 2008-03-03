@@ -7,19 +7,33 @@ use Carp;
 use UNIVERSAL::require;
 use UNIVERSAL::can;
 
+use base qw( Exporter );
+our @EXPORT_OK = qw( $LOCATOR_AUTO_FROM_COMPLIANT $LOCATOR_AUTO $LOCATOR_GPS $LOCATOR_BASIC );
+our %EXPORT_TAGS = (locator => [@EXPORT_OK]);
+
 our $VERSION = '0.01';
 
 our $DOCOMO_GPS_COMPLIANT_MODELS = qr/(?:903i(?!TV|X)|(?:90[45]|SA[78]0[02])i)/;
 
+our $LOCATOR_AUTO_FROM_COMPLIANT = 1;
+our $LOCATOR_AUTO                = 2;
+our $LOCATOR_GPS                 = 3;
+our $LOCATOR_BASIC               = 4;
+
+
 sub import {
-    my $class = shift;
+    my ( $class ) = @_;
     no strict 'refs';
     *{"HTTP\::MobileAgent\::gps_compliant"} = \&_gps_compliant;
-    *{"HTTP\::MobileAgent\::locator"}       = sub { $class->new( shift ) };
+    *{"HTTP\::MobileAgent\::gps_parameter"} = \&_gps_parameter;
+    *{"HTTP\::MobileAgent\::locator"}       = sub { $class->new( @_ ) };
     *{"HTTP\::MobileAgent\::get_location"}  = sub {
-        my ( $self, $stuff ) = @_;
-        $self->locator->get_location( _prepare_params( $stuff ) );
+        my ( $self, $stuff, $option_ref ) = @_;
+        my $params = _prepare_params( $stuff );
+        $self->locator( $params, $option_ref )->get_location( $params );
     };
+
+    $class->export_to_level(1, @_);
 }
 
 sub _gps_compliant {
@@ -34,35 +48,77 @@ sub _gps_compliant {
     }
 }
 
-sub new {
-    my ( $class, $agent ) = @_;
 
-    my $sub;
-    if ( $agent->is_docomo ) {
-        $sub = $agent->gps_compliant ? 'DoCoMo::GPS'
-                                     : 'DoCoMo::BasicLocation';
+sub _gps_parameter {
+    my ( $self, $stuff ) = @_;
+
+    my $params = _prepare_params( $stuff );
+
+    if ( $self->is_docomo ) {
+        return (!defined $params->{AREACODE}) ? 1 : 0;
     }
-    elsif ( $agent->is_ezweb ) {
-        $sub = $agent->gps_compliant ? 'EZweb::GPS'
-                                     : 'EZweb::BasicLocation';
+    elsif ( $self->is_ezweb ) {
+        return ( $params->{datum} =~ /^\d+$/ ) ? 1 : 0;
     }
-    elsif ( $agent->is_softbank ) {
-        $sub = $agent->gps_compliant ? 'SoftBank::GPS'
-                                     : 'SoftBank::BasicLocation';
+    elsif ( $self->is_softbank ) {
+        return ( defined $params->{pos} ) ? 1 : 0;
     }
-    elsif ( $agent->is_airh_phone ) {
-        $sub = 'Willcom::BasicLocation';
+    elsif ( $self->is_airh_phone ) {
+        return 0;
     }
     else {
-        croak( "Invalid mobile user agent: " . $agent->user_agent );
+        croak( "Invalid mobile user agent: " . $self->user_agent );
     }
+}
 
-    my $locator_class = "HTTP::MobileAgent::Plugin::Locator\::$sub";
+
+sub new {
+    my ( $class, $agent, $params, $option_ref ) = @_;
+
+
+    my $sub_locator = _get_sub_locator($agent, $params, $option_ref);
+
+    my $locator_class = "HTTP::MobileAgent::Plugin::Locator\::$sub_locator";
     $locator_class->require or die $!;
     return bless {}, $locator_class;
 }
 
 sub get_location { die "ABSTRACT METHOD" }
+
+sub _get_sub_locator {
+    my ( $agent, $params, $option_ref ) = @_;
+
+    my $carrier =   ( $agent->is_docomo      ) ? 'DoCoMo'   :
+                    ( $agent->is_ezweb       ) ? 'EZweb'    :
+                    ( $agent->is_softbank    ) ? 'SoftBank' :
+                    ( $agent->is_airh_phone  ) ? 'Willcom'  : undef
+    ;
+    if ( !$carrier ) {
+        croak( "Invalid mobile user agent: " . $agent->user_agent );
+    }
+
+    my $locator;
+    if (   !defined $option_ref
+        || !defined $option_ref->{locator}
+        || $option_ref->{locator} eq $LOCATOR_AUTO_FROM_COMPLIANT )
+    {
+        $locator = ( $agent->gps_compliant ) ? 'GPS' : 'BasicLocation';
+    }
+    elsif ( $option_ref->{locator} eq $LOCATOR_AUTO ) {
+        $locator = ( $agent->gps_parameter( $params ) ) ? 'GPS' : 'BasicLocation';
+    }
+    elsif ( $option_ref->{locator} eq $LOCATOR_GPS ) {
+        $locator =  'GPS';
+    }
+    elsif ( $option_ref->{locator} eq $LOCATOR_BASIC ) {
+        $locator = 'BasicLocation';
+    }
+    else {
+        croak( "Invalid locator: " . $option_ref->{locator} );
+    }
+
+    return $carrier . '::' . $locator;
+}
 
 sub _prepare_params {
     my $stuff = shift;
@@ -97,19 +153,45 @@ HTTP::MobileAgent::Plugin::Locator - Handling mobile location information plugin
 
 =head1 METHODS
 
-=over
 
-=item get_location([params]);
+=head2 get_location([params], $option_ref);
 
 return Geo::Coordinates::Converter::Point instance formatted if specify gps or basic location parameters sent from carrier. The parameters are different by each carrier.
 
 This method accept a Apache instance, CGI instance or hashref of query parameters.
 
-=item gps_compliant()
+=over
+
+=item $option_ref{locator}
+
+select locator class algorithm option.
+
+$LOCATOR_AUTO_FROM_COMPLIANT
+ auto detect locator from gps compliant.this is I<default>.
+
+$LOCATOR_AUTO
+ auto detect locator class from params.
+
+$LOCATOR_GPS
+ select GPS class.
+
+$LOCATOR_BASIC
+ select BasicLocation class.
+
+=back
+
+
+
+=head2 gps_compliant()
 
 returns if the agent is GPS compliant.
 
-=back
+
+
+=head2 gps_parameter([params])
+
+returns if the params is GPS request.
+
 
 =head1 CLASSES
 
