@@ -123,7 +123,7 @@ sub _get_sub_locator {
 sub _prepare_params {
     my $stuff = shift;
     if ( ref $stuff && eval { $stuff->can( 'param' ) } ) {
-        return +{ map { $_ => $stuff->param( $_ ) } $stuff->param };
+        return +{ map { $_ => (scalar(@{[$stuff->param($_)]}) > 1) ? [$stuff->param( $_ )] : $stuff->param($_) } $stuff->param };
     }
     else {
         return $stuff;
