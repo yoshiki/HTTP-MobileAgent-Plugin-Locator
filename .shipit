@@ -1,0 +1,4 @@
+steps = CommitMessageWrap, FindVersion, ChangeVersion, CheckChangeLog, DistTest, Commit, Tag, MakeDist, UploadCPAN
+svn.tagpattern = http://svn.coderepos.org/share/lang/perl/HTTP-MobileAgent-Plugin-Locator/tags/release-%v
+Commit_message.format = lang/perl/HTTP-MobileAgent-Plugin-Locator: %msg
+CheckChangeLog.files = Changes

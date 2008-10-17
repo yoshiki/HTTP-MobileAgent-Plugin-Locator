@@ -49,9 +49,8 @@ sub locator_test {
     locator_test(
         $for_basic_on_gps_option_refs,
         { AREACODE => '05902' },
-        { lat => '35.39.43.535', lng => '139.44.06.233' }
+        { lat => '35.39.52.909', lng => '139.43.52.172' }
     );
-    
 }
 
 { # DoCoMo Basic device
@@ -65,7 +64,7 @@ sub locator_test {
     locator_test(
         $for_basic_option_refs,
         { AREACODE => '05902' },
-        { lat => '35.39.43.535', lng => '139.44.06.233' }
+        { lat => '35.39.52.909', lng => '139.43.52.172' }
     );
 }
 
@@ -73,7 +72,7 @@ sub locator_test {
 { # au GPS device
     local $ENV{HTTP_USER_AGENT} = 'KDDI-CA31 UP.Browser/6.2.0.7.3.129 (GUI) MMP/2.0';
     local $ENV{HTTP_X_UP_DEVCAP_MULTIMEDIA} = '0200000000000000';
-    
+
     locator_test(
         $for_gps_option_refs,
         { lat => '+35.21.03.342', lon => '+138.34.45.725', datum => '0' },
@@ -104,7 +103,7 @@ sub locator_test {
         { pos => 'N35.21.03.342E138.34.45.725' },
         { lat => '35.21.03.342', lng => '138.34.45.725' }
     );
-    
+
     local $ENV{ HTTP_X_JPHONE_GEOCODE } = '352051%1a1383456%1afoo';
     locator_test(
         $for_basic_on_gps_option_refs,

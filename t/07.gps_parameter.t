@@ -9,18 +9,18 @@ use HTTP::MobileAgent::Plugin::Locator;
     my $agent = HTTP::MobileAgent->new;
 
     # GPS
-    is $agent->gps_parameter({
+    is HTTP::MobileAgent::Plugin::Locator::_is_gps_parameter( $agent, {
         lat => '35.21.03.342', lon => '138.34.45.725', geo => 'wgs84'
-    }) => 1;
+    } ) => 1;
 
     # Basic
-    is $agent->gps_parameter({
-        AREACODE => '05902', LAT => '+35.39.43.538', LON => '+139.44.06.232', GEO => 'wgs84', XACC => 1 
-    }) => 0;
+    is HTTP::MobileAgent::Plugin::Locator::_is_gps_parameter( $agent, {
+        AREACODE => '05902', LAT => '+35.39.43.538', LON => '+139.44.06.232', GEO => 'wgs84', XACC => 1
+    }) => '';
 
-    is $agent->gps_parameter({
+    is HTTP::MobileAgent::Plugin::Locator::_is_gps_parameter( $agent, {
         AREACODE => '05902'
-    }) => 0;
+    }) => '';
 }
 
 
@@ -30,32 +30,31 @@ use HTTP::MobileAgent::Plugin::Locator;
     my $agent = HTTP::MobileAgent->new;
 
     # GPS
-    is $agent->gps_parameter({
+    is HTTP::MobileAgent::Plugin::Locator::_is_gps_parameter( $agent, {
         lat => '+35.21.03.342', lon => '+138.34.45.725', datum => '0'
     }) => 1;
 
     # Basic
-    is $agent->gps_parameter({
+    is HTTP::MobileAgent::Plugin::Locator::_is_gps_parameter( $agent, {
         lat => '35.21.03.342', lon => '138.34.45.725', datum => 'wgs84'
-    }) => 0;
-
+    }) => '';
 }
 
 
 { # SoftBank
-    local $ENV{HTTP_USER_AGENT} = 'SoftBank/1.0/911T/TJ001 Browser/NetFront/3.3 Profile/MIDP-2.0 Configuration/CLDC-1.1';
+    local $ENV{HTTP_USER_AGENT} =
+        'SoftBank/1.0/911T/TJ001 Browser/NetFront/3.3 Profile/MIDP-2.0 Configuration/CLDC-1.1';
     my $agent = HTTP::MobileAgent->new;
 
     # GPS
-    is $agent->gps_parameter({
-        pos => 'N35.21.03.342E138.34.45.725' 
+    is HTTP::MobileAgent::Plugin::Locator::_is_gps_parameter( $agent, {
+        pos => 'N35.21.03.342E138.34.45.725'
     }) => 1;
 
     # Basic
     local $ENV{ HTTP_X_JPHONE_GEOCODE } = '352051%1a1383456%1afoo';
-    is $agent->gps_parameter({
-    }) => 0;
-
+    is HTTP::MobileAgent::Plugin::Locator::_is_gps_parameter( $agent, {
+    }) => '';
 }
 
 

@@ -4,6 +4,12 @@ use HTTP::MobileAgent;
 use HTTP::MobileAgent::Plugin::Locator;
 
 {
+    local $ENV{HTTP_USER_AGENT} = 'DoCoMo/2.0 P906i(c100;TB;W24H15)';
+    my $agent = HTTP::MobileAgent->new;
+    ok $agent->gps_compliant, "docomo gps";
+}
+
+{
     local $ENV{HTTP_USER_AGENT} = 'DoCoMo/2.0 SH904i(c100;TB;W24H16)';
     my $agent = HTTP::MobileAgent->new;
     ok $agent->gps_compliant, "docomo gps";
