@@ -11,9 +11,7 @@ use base qw( Exporter );
 our @EXPORT_OK = qw( $LOCATOR_AUTO_FROM_COMPLIANT $LOCATOR_AUTO $LOCATOR_GPS $LOCATOR_BASIC );
 our %EXPORT_TAGS = (locator => [@EXPORT_OK]);
 
-our $VERSION = '0.03';
-
-our $DOCOMO_GPS_COMPLIANT_MODELS = qr/D903i|D904i|D905i|F01A|F03A|F05A|F09A|F801i|F883iES|F883iESS|F884i|F884iES|F903i|F904i|F905i|F906i|N01A|N02A|N06A|N08A|N09A|N903i|N904i|N905i|N905imyu|N906i|N906i|N906iL|P01A|P02A|P07A|P08A|P09A|P903i|P904i|P905i|P906i|SA700iS|SA702i|SA800i|SH01A|SH02A|SH03A|SH04A|SH05A|SH06A|SH06A|SH07A|SH903i|SH904i|SH905i|SH906i|SO903i|SO905i|SO905iCS|SO906i/;
+our $VERSION = '0.04';
 
 our $LOCATOR_AUTO_FROM_COMPLIANT = 1;
 our $LOCATOR_AUTO                = 2;
@@ -24,7 +22,6 @@ our $LOCATOR_BASIC               = 4;
 sub import {
     my ( $class ) = @_;
     no strict 'refs';
-    *HTTP::MobileAgent::gps_compliant = \&_gps_compliant;
     *HTTP::MobileAgent::locator       = sub { $class->new( @_ ) };
     *HTTP::MobileAgent::get_location  = sub {
         my ( $self, $stuff, $option_ref ) = @_;
@@ -43,20 +40,6 @@ sub new {
 }
 
 sub get_location { die "ABSTRACT METHOD" }
-
-sub _gps_compliant {
-    my $self = shift;
-    if ( $self->is_docomo ) {
-        return $self->model =~ $DOCOMO_GPS_COMPLIANT_MODELS;
-    }
-    elsif ( $self->is_ezweb ) {
-        my @specs = split //, $ENV{ HTTP_X_UP_DEVCAP_MULTIMEDIA } || '';
-        return defined $specs[ 1 ] && $specs[ 1 ] =~ /^[23]$/;
-    }
-    elsif ( $self->is_softbank ) {
-        return $self->is_type_3gc;
-    }
-}
 
 sub _get_carrier_locator {
     my ( $agent, $params, $option_ref ) = @_;

@@ -1,5 +1,9 @@
 Revision history for HTTP-MobileAgent-Plugin-Locator
 
+0.04    Tue Sep  7 07:01:15 2010
+        * Required HTTP::MobileAgent verion 0.29.
+        * Removed gps_compliant() because of HTTP::MobileAgent supported this method.
+
 0.02    Fri Oct 17 14:57:36 2008
         * Supported DoCoMo 906i series as GPS compliant.
         * Added option for select by locator algorithm to get_location() method.
