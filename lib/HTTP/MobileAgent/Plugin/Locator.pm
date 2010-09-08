@@ -11,7 +11,7 @@ use base qw( Exporter );
 our @EXPORT_OK = qw( $LOCATOR_AUTO_FROM_COMPLIANT $LOCATOR_AUTO $LOCATOR_GPS $LOCATOR_BASIC );
 our %EXPORT_TAGS = (locator => [@EXPORT_OK]);
 
-our $VERSION = '0.04';
+our $VERSION = '0.03';
 
 our $LOCATOR_AUTO_FROM_COMPLIANT = 1;
 our $LOCATOR_AUTO                = 2;
