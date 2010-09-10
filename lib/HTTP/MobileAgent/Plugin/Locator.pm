@@ -143,7 +143,7 @@ HTTP::MobileAgent::Plugin::Locator - Handling mobile location information plugin
 
 return Geo::Coordinates::Converter::Point instance formatted if specify gps or basic location parameters sent from carrier. The parameters are different by each carrier.
 
-This method accept a Apache instance, CGI instance or hashref of query parameters.
+This method accept a Apache instance, CGI instance, Plack::Request or hashref of query parameters.
 
 =over
 
