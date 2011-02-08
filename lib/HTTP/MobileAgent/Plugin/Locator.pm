@@ -207,6 +207,26 @@ for basic location information data support.
 
 There is request template using C<Template> in eg directory and mod_rewrite configuration for ezweb extraordinary parameter handling.
 
+=head1 COOK BOOK
+
+=over 4
+
+=item HOW DO I GET iArea area code.
+
+    use Geo::Coordinates::Converter::iArea;
+    my $areacode = $agent->get_location($q)->converter('iarea')->areacode;
+
+=item HOW DO I GET geohash.
+
+    use Geo::Coordinates::Converter::Format::GeoHash;
+    my $geohash = $ma->get_location(
+        { lat => '35.21.03.342', lon => '138.34.45.725', geo => 'wgs84' },
+    )->converter('wgs84', 'geohash')->geohash;
+
+=item 
+
+=back
+
 =head1 AUTHOR
 
 Yoshiki Kurihara  E<lt>kurihara __at__ cpan.orgE<gt> with many feedbacks and changes from:

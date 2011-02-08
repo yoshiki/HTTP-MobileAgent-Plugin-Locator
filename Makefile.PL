@@ -15,4 +15,6 @@ requires 'HTTP::MobileAgent' => 0.29;
 requires 'UNIVERSAL::require' => 0;
 requires 'UNIVERSAL::can' => 0;
 
+test_requires 'Test::Requires';
+
 WriteAll;
