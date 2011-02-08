@@ -9,8 +9,8 @@ version_from    'lib/HTTP/MobileAgent/Plugin/Locator.pm';
 
 build_requires 'Test::More' => 0;
 
-requires 'Geo::Coordinates::Converter' => 0;
-requires 'Geo::Coordinates::Converter::iArea' => '0.08';
+requires 'Geo::Coordinates::Converter' => '0.10';
+requires 'Geo::Coordinates::Converter::iArea' => '0.11';
 requires 'HTTP::MobileAgent' => 0.29;
 requires 'UNIVERSAL::require' => 0;
 requires 'UNIVERSAL::can' => 0;
