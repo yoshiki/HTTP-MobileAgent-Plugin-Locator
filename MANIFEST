@@ -36,3 +36,5 @@ t/06.hashref_params.t
 t/07.gps_parameter.t
 t/08.regression-params.t
 t/09.get_carrier_locator.t
+t/100_cookbook/01_iarea.t
+t/100_cookbook/02_geohash.t

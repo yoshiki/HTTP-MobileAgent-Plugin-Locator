@@ -11,7 +11,7 @@ use base qw( Exporter );
 our @EXPORT_OK = qw( $LOCATOR_AUTO_FROM_COMPLIANT $LOCATOR_AUTO $LOCATOR_GPS $LOCATOR_BASIC );
 our %EXPORT_TAGS = (locator => [@EXPORT_OK]);
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 our $LOCATOR_AUTO_FROM_COMPLIANT = 1;
 our $LOCATOR_AUTO                = 2;
@@ -231,7 +231,7 @@ There is request template using C<Template> in eg directory and mod_rewrite conf
 
 Yoshiki Kurihara  E<lt>kurihara __at__ cpan.orgE<gt> with many feedbacks and changes from:
 
-  Tokuhiro Matsuno E<lt>tokuhiro __at__ mobilefactory.jpE<gt>
+  Tokuhiro Matsuno E<lt>tokuhirom __at__ gmail.comE<gt>
   Masahiro Chiba E<lt>chiba __at__ geminium.comE<gt>
 
 =head1 SEE ALSO
